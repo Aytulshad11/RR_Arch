@@ -48,13 +48,60 @@
 
 
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, useInView, useScroll, useTransform } from 'framer-motion';
-import { FaPhone, FaWhatsapp, FaMapMarkerAlt, FaEnvelope, FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaBars, FaTimes, FaRulerCombined, FaCheckCircle, FaChevronRight } from 'react-icons/fa';
-import Logo from '../src/assets/logo.png'; // Ensure you have a logo image in the specified path
+import { motion,  AnimatePresence, useInView, useScroll, useTransform } from 'framer-motion';
+import { FaPhone, FaWhatsapp, FaMapMarkerAlt, FaEnvelope, FaFacebook, FaTwitter, FaChevronLeft, FaInstagram, FaLinkedin, FaBars, FaTimes, FaRulerCombined, FaCheckCircle, FaChevronRight } from 'react-icons/fa';
+
+import Logo from '../src/assets/Logo_1.png'; // Ensure you have a logo image in the specified path
 // Custom Cursor Component
+// const CustomCursor = () => {
+//   const [position, setPosition] = useState({ x: 0, y: 0 });
+//   const [isHovering, setIsHovering] = useState(false);
+
+//   useEffect(() => {
+//     const handleMouseMove = (e) => {
+//       setPosition({ x: e.clientX, y: e.clientY });
+//     };
+
+//     const handleMouseOver = (e) => {
+//       // Check if hovering over any element that should trigger the cursor change
+//       if (e.target.closest('a, button, .cursor-hover, [data-cursor-hover="true"]')) {
+//         setIsHovering(true);
+//       } else {
+//         setIsHovering(false);
+//       }
+//     };
+
+//     window.addEventListener('mousemove', handleMouseMove);
+//     window.addEventListener('mouseover', handleMouseOver);
+
+//     return () => {
+//       window.removeEventListener('mousemove', handleMouseMove);
+//       window.removeEventListener('mouseover', handleMouseOver);
+//     };
+//   }, []);
+
+//   return (
+//     <motion.div
+//       className="fixed top-0 left-0 w-6 h-6 rounded-full border-2 border-blue-900 pointer-events-none z-[9999] mix-blend-difference"
+//       animate={{
+//         x: position.x - 12,
+//         y: position.y - 12,
+//         scale: isHovering ? 2 : 1,
+//         // Enlarge and change color on hover (using a subtle yellow/gold for the change)
+//         backgroundColor: isHovering ? 'rgba(212, 175, 55, 0.3)' : 'transparent', 
+//         borderColor: isHovering ? 'transparent' : '#1e3a8a' // Royal Navy Blue
+//       }}
+//       transition={{ type: 'spring', stiffness: 500, damping: 28 }}
+//     />
+//   );
+// };
+
 const CustomCursor = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
+  
+  // Define the non-animatable "transparent" value as transparent black RGBA
+  const TRANSPARENT_RGBA = 'rgba(0, 0, 0, 0)'; 
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -86,9 +133,9 @@ const CustomCursor = () => {
         x: position.x - 12,
         y: position.y - 12,
         scale: isHovering ? 2 : 1,
-        // Enlarge and change color on hover (using a subtle yellow/gold for the change)
-        backgroundColor: isHovering ? 'rgba(212, 175, 55, 0.3)' : 'transparent', 
-        borderColor: isHovering ? 'transparent' : '#1e3a8a' // Royal Navy Blue
+        // FIXED: Use RGBA for animation start/end points
+        backgroundColor: isHovering ? 'rgba(212, 175, 55, 0.3)' : TRANSPARENT_RGBA, 
+        borderColor: isHovering ? TRANSPARENT_RGBA : '#1e3a8a' // Royal Navy Blue
       }}
       transition={{ type: 'spring', stiffness: 500, damping: 28 }}
     />
@@ -110,24 +157,42 @@ const Header = () => {
 
   const navLinks = [
     { name: 'Home', href: '#home' },
-    { name: 'Plans', href: '#services' },
-    { name: 'Elevation', href: '#services' },
-    { name: 'Interior', href: '#services' },
+   // New (Specific)
+{ name: 'Plans', href: '#services?tab=Plans' },
+{ name: 'Elevation', href: '#services?tab=Elevation' },
+{ name: 'Interior', href: '#services?tab=Interior' },
     { name: 'About Us', href: '#why-choose-us' },
     { name: 'Contact Us', href: '#footer' }
   ];
 
-  const scrollToSection = (e, href) => {
-    e.preventDefault();
-    const element = document.querySelector(href);
-    if (element) {
-      const offset = 80;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
-      window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-      setIsOpen(false);
-    }
-  };
+    const scrollToSection = (e, href) => {
+  e.preventDefault();
+
+  // Check if the link targets the services section with a tab
+  if (href.startsWith('#services?tab=')) {
+    const tabName = href.split('tab=')[1];
+
+    // 🔥 Immediately update the ServicesSection active tab (no delay)
+    const event = new CustomEvent('updateServiceTab', { detail: tabName });
+    window.dispatchEvent(event);
+
+    // Update hash so refresh / share still works
+    window.location.hash = `services?tab=${tabName}`;
+
+    // Adjust href to scroll to the section
+    href = '#services';
+  }
+
+  const element = document.querySelector(href);
+  if (element) {
+    const offset = 80;
+    const elementPosition = element.getBoundingClientRect().top;
+    const offsetPosition = elementPosition + window.pageYOffset - offset;
+    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+    setIsOpen(false);
+  }
+};
+
 
   return (
     <motion.header
@@ -140,7 +205,7 @@ const Header = () => {
       }`}
     >
       <div className="container mx-auto px-4 lg:px-16 flex justify-between items-center">
-         <div className="w-88 h-14 flex"> {/* Set a fixed size for the logo container (adjust w-40 and h-8 as needed) */}
+         <div className="w-40 h-8 flex"> {/* Set a fixed size for the logo container (adjust w-40 and h-8 as needed) */}
           <a href="#home" className="w-full h-full" data-cursor-hover="true">
             <img 
               src={Logo} // 
@@ -303,80 +368,284 @@ const HeroSection = () => {
 };
 
 // Services Section
+// const ServicesSection = () => {
+//   const [activeService, setActiveService] = useState(0);
+//   const ref = useRef(null);
+//   const isInView = useInView(ref, { once: true, margin: '-100px' });
+//   const scrollRef = useRef(null);
+//   const { scrollYProgress } = useScroll({ target: scrollRef });
+
+//   // Simplified Parallax-like effect on the image container (vertical shift)
+//   const y = useTransform(scrollYProgress, [0, 1], ['-10%', '10%']);
+
+//  const services = [
+//   {
+//     name: 'Plans',
+//     images: [
+//       'https://images.pexels.com/photos/186077/pexels-photo-186077.jpeg?auto=compress&cs=tinysrgb&w=800',
+//       'https://images.pexels.com/photos/7269150/pexels-photo-7269150.jpeg?auto=compress&cs=tinysrgb&w=800'
+//     ],
+//     description: 'Detailed 2D floor plans and layout drawings for construction permits and efficient space utilization.'
+//   },
+//   {
+//     name: 'Elevation',
+//     images: [
+//       'https://images.pexels.com/photos/258163/pexels-photo-258163.jpeg?auto=compress&cs=tinysrgb&w=800',
+//       'https://images.pexels.com/photos/2080962/pexels-photo-2080962.jpeg?auto=compress&cs=tinysrgb&w=800'
+//     ],
+//     description: 'Stunning 3D exterior views (front, rear, side) showing materials, finishes, and architectural details.'
+//   },
+//   {
+//     name: 'Interior',
+//     images: [
+//       'https://images.pexels.com/photos/1643384/pexels-photo-1643384.jpeg?auto=compress&cs=tinysrgb&w=800',
+//       'https://images.pexels.com/photos/6322046/pexels-photo-6322046.jpeg?auto=compress&cs=tinysrgb&w=800'
+//     ],
+//     description: 'Complete interior design, including furniture layout, material selection, lighting, and 3D rendering.'
+//   },
+//   {
+//     name: 'Landscape',
+//     images: [
+//       'https://images.pexels.com/photos/210186/pexels-photo-210186.jpeg?auto=compress&cs=tinysrgb&w=800',
+//       'https://images.pexels.com/photos/1393649/pexels-photo-1393649.jpeg?auto=compress&cs=tinysrgb&w=800'
+//     ],
+//     description: 'Creative and functional outdoor space design, including gardens, patios, and pool areas.'
+//   }
+// ];
+  
+//   // Carousel logic: cycle through images for the active service
+//   const [currentServiceImage, setCurrentServiceImage] = useState(0);
+
+//   useEffect(() => {
+//     setCurrentServiceImage(0); // Reset image index when service changes
+//     const interval = setInterval(() => {
+//         setCurrentServiceImage(prev => (prev + 1) % services[activeService].images.length);
+//     }, 4000);
+//     return () => clearInterval(interval);
+//   }, [activeService, services]);
+
+
+//   return (
+//     <section id="services" ref={ref} className="py-24 bg-white">
+//       <div className="container mx-auto px-4 lg:px-16">
+//         <motion.div
+//           initial={{ y: 50, opacity: 0 }}
+//           animate={isInView ? { y: 0, opacity: 1 } : {}}
+//           transition={{ duration: 0.6 }}
+//           className="text-center mb-16"
+//         >
+//           <h2 className="text-4xl md:text-5xl font-bold text-blue-900 mb-4">Explore Our Comprehensive Services</h2>
+//           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+//             From foundation plans to final interior details, we cover every step of your home building journey.
+//           </p>
+//         </motion.div>
+
+//         <div className="grid lg:grid-cols-2 gap-12 items-start">
+//           {/* Service List (Left Column) */}
+//           <motion.div
+//             initial={{ x: -50, opacity: 0 }}
+//             animate={isInView ? { x: 0, opacity: 1 } : {}}
+//             transition={{ duration: 0.6, delay: 0.2 }}
+//             className="space-y-4 lg:sticky lg:top-24"
+//           >
+//             {services.map((service, index) => (
+//               <motion.button
+//                 key={index}
+//                 onClick={() => setActiveService(index)}
+//                 whileHover={{ x: 5 }} // Subtle horizontal shift on hover
+//                 className={`w-full text-left p-6 rounded-xl transition-all flex justify-between items-center ${
+//                   activeService === index
+//                     ? 'bg-blue-900 text-white shadow-xl transform scale-[1.01]'
+//                     : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+//                 }`}
+//                 data-cursor-hover="true"
+//               >
+//                 <div>
+//                     <h3 className="text-2xl font-semibold mb-1">{service.name}</h3>
+//                     <p className={`text-sm ${activeService === index ? 'text-gray-200' : 'text-gray-500'}`}>{service.description}</p>
+//                 </div>
+//                 <FaChevronRight className="text-2xl opacity-50" />
+//               </motion.button>
+//             ))}
+//           </motion.div>
+
+//           {/* Image Carousel (Right Column) */}
+//           <div ref={scrollRef}>
+//             <motion.div
+//                 initial={{ x: 50, opacity: 0 }}
+//                 animate={isInView ? { x: 0, opacity: 1 } : {}}
+//                 transition={{ duration: 0.6, delay: 0.4 }}
+//                 className="relative h-[600px] rounded-2xl overflow-hidden shadow-2xl"
+//                 style={{ y: y }} // Parallax effect
+//             >
+//                 {services[activeService].images.map((img, idx) => (
+//                     <motion.div
+//                         key={idx}
+//                         // Image carousel that updates based on selected service (click service → load images with fade animation)
+//                         initial={{ opacity: 0 }}
+//                         animate={{ opacity: idx === currentServiceImage ? 1 : 0 }}
+//                         transition={{ duration: 1 }}
+//                         className="absolute inset-0 bg-cover bg-center"
+//                         style={{ backgroundImage: `url(${img})` }}
+//                     />
+//                 ))}
+//             </motion.div>
+//           </div>
+//         </div>
+//       </div>
+//     </section>
+//   );
+// };
+
+
 const ServicesSection = () => {
   const [activeService, setActiveService] = useState(0);
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-100px' });
-  const scrollRef = useRef(null);
-  const { scrollYProgress } = useScroll({ target: scrollRef });
-
-  // Simplified Parallax-like effect on the image container (vertical shift)
-  const y = useTransform(scrollYProgress, [0, 1], ['-10%', '10%']);
-
- const services = [
-  {
-    name: 'Plans',
-    images: [
-      'https://images.pexels.com/photos/186077/pexels-photo-186077.jpeg?auto=compress&cs=tinysrgb&w=800',
-      'https://images.pexels.com/photos/7269150/pexels-photo-7269150.jpeg?auto=compress&cs=tinysrgb&w=800'
-    ],
-    description: 'Detailed 2D floor plans and layout drawings for construction permits and efficient space utilization.'
-  },
-  {
-    name: 'Elevation',
-    images: [
-      'https://images.pexels.com/photos/258163/pexels-photo-258163.jpeg?auto=compress&cs=tinysrgb&w=800',
-      'https://images.pexels.com/photos/2080962/pexels-photo-2080962.jpeg?auto=compress&cs=tinysrgb&w=800'
-    ],
-    description: 'Stunning 3D exterior views (front, rear, side) showing materials, finishes, and architectural details.'
-  },
-  {
-    name: 'Interior',
-    images: [
-      'https://images.pexels.com/photos/1643384/pexels-photo-1643384.jpeg?auto=compress&cs=tinysrgb&w=800',
-      'https://images.pexels.com/photos/6322046/pexels-photo-6322046.jpeg?auto=compress&cs=tinysrgb&w=800'
-    ],
-    description: 'Complete interior design, including furniture layout, material selection, lighting, and 3D rendering.'
-  },
-  {
-    name: 'Landscape',
-    images: [
-      'https://images.pexels.com/photos/210186/pexels-photo-210186.jpeg?auto=compress&cs=tinysrgb&w=800',
-      'https://images.pexels.com/photos/1393649/pexels-photo-1393649.jpeg?auto=compress&cs=tinysrgb&w=800'
-    ],
-    description: 'Creative and functional outdoor space design, including gardens, patios, and pool areas.'
-  }
-];
-  
-  // Carousel logic: cycle through images for the active service
   const [currentServiceImage, setCurrentServiceImage] = useState(0);
+  const [isPaused, setIsPaused] = useState(false); // 🆕 state for pause control
 
+  const ref = useRef(null);
+  const scrollRef = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const { scrollYProgress } = useScroll({ target: scrollRef });
+  const y = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
+
+  const services = [
+    {
+      name: "Plans",
+      images: [
+        'https://images.pexels.com/photos/186077/pexels-photo-186077.jpeg?auto=compress&cs=tinysrgb&w=800',
+        "https://images.pexels.com/photos/7269150/pexels-photo-7269150.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/439227/pexels-photo-439227.jpeg?auto=compress&cs=tinysrgb&w=800",
+      ],
+      description:
+        "Detailed 2D floor plans and layout drawings for construction permits and efficient space utilization.",
+    },
+    {
+      name: "Elevation",
+      images: [
+        "https://images.pexels.com/photos/258163/pexels-photo-258163.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/2080962/pexels-photo-2080962.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/2097721/pexels-photo-2097721.jpeg?auto=compress&cs=tinysrgb&w=800",
+      ],
+      description:
+        "Stunning 3D exterior views (front, rear, side) showing materials, finishes, and architectural details.",
+    },
+    {
+      name: "Interior",
+      images: [
+        "https://images.pexels.com/photos/1643384/pexels-photo-1643384.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/6322046/pexels-photo-6322046.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "https://images.pexels.com/photos/439227/pexels-photo-439227.jpeg?auto=compress&cs=tinysrgb&w=800",
+      ],
+      description:
+        "Complete interior design, including furniture layout, material selection, lighting, and 3D rendering.",
+    },
+    {
+      name: "Landscape",
+      images: [
+       'https://images.pexels.com/photos/210186/pexels-photo-210186.jpeg?auto=compress&cs=tinysrgb&w=800',
+        "https://images.pexels.com/photos/1393649/pexels-photo-1393649.jpeg?auto=compress&cs=tinysrgb&w=800",
+      ],
+      description:
+        "Creative and functional outdoor space design, including gardens, patios, and pool areas.",
+    },
+  ];
+
+  // --- URL Sync ---
+useEffect(() => {
+  const handleTabUpdate = (event) => {
+    const tabName = event.detail;
+    const foundIndex = services.findIndex(
+      (s) => s.name.toLowerCase() === tabName.toLowerCase()
+    );
+    if (foundIndex !== -1) {
+      setActiveService(foundIndex);
+    }
+  };
+
+  window.addEventListener('updateServiceTab', handleTabUpdate);
+  return () => window.removeEventListener('updateServiceTab', handleTabUpdate);
+}, [services]);
+
+  // --- Manual Control Handlers ---
+  const handleServiceClick = (index) => {
+    setActiveService(index);
+    setCurrentServiceImage(0);
+    window.history.pushState(null, "", `#services?tab=${services[index].name}`);
+  };
+
+  const handlePrev = () => {
+    setCurrentServiceImage(
+      (prev) =>
+        (prev - 1 + services[activeService].images.length) %
+        services[activeService].images.length
+    );
+  };
+
+  const handleNext = () => {
+    setCurrentServiceImage(
+      (prev) => (prev + 1) % services[activeService].images.length
+    );
+  };
+
+  // --- Auto Slide (with pause) ---
   useEffect(() => {
-    setCurrentServiceImage(0); // Reset image index when service changes
-    const interval = setInterval(() => {
-        setCurrentServiceImage(prev => (prev + 1) % services[activeService].images.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [activeService, services]);
+    if (isPaused) return; // stop auto scroll when paused
 
+    const interval = setInterval(() => {
+      setCurrentServiceImage(
+        (prev) => (prev + 1) % services[activeService].images.length
+      );
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [activeService, isPaused]);
+
+  // --- Swipe Handling ---
+  const handleDragEnd = (event, info) => {
+    const swipeThreshold = 50;
+    if (info.offset.x < -swipeThreshold) handleNext();
+    else if (info.offset.x > swipeThreshold) handlePrev();
+  };
+
+  // --- Framer Motion Variants ---
+  const variants = {
+    enter: (direction) => ({
+      x: direction > 0 ? 100 : -100,
+      opacity: 0,
+    }),
+    center: {
+      zIndex: 1,
+      x: 0,
+      opacity: 1,
+    },
+    exit: (direction) => ({
+      zIndex: 0,
+      x: direction > 0 ? -100 : 100,
+      opacity: 0,
+    }),
+  };
 
   return (
-    <section id="services" ref={ref} className="py-24 bg-white">
+    <section id="services" ref={ref} className="py-16 md:py-24 bg-white">
       <div className="container mx-auto px-4 lg:px-16">
         <motion.div
           initial={{ y: 50, opacity: 0 }}
           animate={isInView ? { y: 0, opacity: 1 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-10 md:mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-blue-900 mb-4">Explore Our Comprehensive Services</h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            From foundation plans to final interior details, we cover every step of your home building journey.
+          <h2 className="text-4xl md:text-5xl font-bold text-blue-900 mb-4">
+            Explore Our Comprehensive Services
+          </h2>
+          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+            From foundation plans to final interior details, we cover every step
+            of your home building journey.
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-12 items-start">
-          {/* Service List (Left Column) */}
+        <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-start">
+          {/* LEFT COLUMN */}
           <motion.div
             initial={{ x: -50, opacity: 0 }}
             animate={isInView ? { x: 0, opacity: 1 } : {}}
@@ -386,44 +655,106 @@ const ServicesSection = () => {
             {services.map((service, index) => (
               <motion.button
                 key={index}
-                onClick={() => setActiveService(index)}
-                whileHover={{ x: 5 }} // Subtle horizontal shift on hover
-                className={`w-full text-left p-6 rounded-xl transition-all flex justify-between items-center ${
+                onClick={() => handleServiceClick(index)}
+                onMouseEnter={() => setIsPaused(true)}
+                onMouseLeave={() => setIsPaused(false)}
+                whileHover={{ x: 5 }}
+                className={`w-full text-left p-4 md:p-6 rounded-xl transition-all flex justify-between items-center ${
                   activeService === index
-                    ? 'bg-blue-900 text-white shadow-xl transform scale-[1.01]'
-                    : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                    ? "bg-blue-900 text-white shadow-xl transform scale-[1.01]"
+                    : "bg-gray-100 text-gray-800 hover:bg-gray-200"
                 }`}
-                data-cursor-hover="true"
               >
                 <div>
-                    <h3 className="text-2xl font-semibold mb-1">{service.name}</h3>
-                    <p className={`text-sm ${activeService === index ? 'text-gray-200' : 'text-gray-500'}`}>{service.description}</p>
+                  <h3 className="text-xl md:text-2xl font-semibold mb-1">
+                    {service.name}
+                  </h3>
+                  <p
+                    className={`text-xs md:text-sm ${
+                      activeService === index
+                        ? "text-gray-200"
+                        : "text-gray-500"
+                    }`}
+                  >
+                    {service.description}
+                  </p>
                 </div>
                 <FaChevronRight className="text-2xl opacity-50" />
               </motion.button>
             ))}
           </motion.div>
 
-          {/* Image Carousel (Right Column) */}
-          <div ref={scrollRef}>
+          {/* RIGHT COLUMN */}
+          <div ref={scrollRef} className="relative">
             <motion.div
-                initial={{ x: 50, opacity: 0 }}
-                animate={isInView ? { x: 0, opacity: 1 } : {}}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                className="relative h-[600px] rounded-2xl overflow-hidden shadow-2xl"
-                style={{ y: y }} // Parallax effect
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              onDragEnd={handleDragEnd}
+              onMouseEnter={() => setIsPaused(true)}  // 🆕 pause on hover image
+              onMouseLeave={() => setIsPaused(false)} // 🆕 resume on leave
+              className="relative h-[350px] md:h-[600px] rounded-2xl overflow-hidden shadow-2xl z-0 bg-gray-200"
+              style={{ y }}
             >
-                {services[activeService].images.map((img, idx) => (
-                    <motion.div
-                        key={idx}
-                        // Image carousel that updates based on selected service (click service → load images with fade animation)
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: idx === currentServiceImage ? 1 : 0 }}
-                        transition={{ duration: 1 }}
-                        className="absolute inset-0 bg-cover bg-center"
-                        style={{ backgroundImage: `url(${img})` }}
-                    />
+              <AnimatePresence initial={false} custom={currentServiceImage}>
+                <motion.div
+                  key={currentServiceImage}
+                  custom={1}
+                  variants={variants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{
+                    x: { type: "spring", stiffness: 300, damping: 30 },
+                    opacity: { duration: 0.5 },
+                  }}
+                  className="absolute inset-0 bg-cover bg-center pointer-events-none"
+                  style={{
+                    backgroundImage: `url(${services[activeService].images[currentServiceImage]})`,
+                  }}
+                />
+              </AnimatePresence>
+
+              {/* ARROWS */}
+              <div className="absolute inset-0 flex items-center justify-between p-4 z-20">
+                <motion.button
+                  onClick={handlePrev}
+                  onMouseEnter={() => setIsPaused(true)}
+                  onMouseLeave={() => setIsPaused(false)}
+                  whileHover={{ scale: 1.1 }}
+                  className="p-3 md:p-4 bg-blue-900/50 hover:bg-blue-900/80 text-white rounded-full transition-all"
+                >
+                  <FaChevronLeft size={16} />
+                </motion.button>
+                <motion.button
+                  onClick={handleNext}
+                  onMouseEnter={() => setIsPaused(true)}
+                  onMouseLeave={() => setIsPaused(false)}
+                  whileHover={{ scale: 1.1 }}
+                  className="p-3 md:p-4 bg-blue-900/50 hover:bg-blue-900/80 text-white rounded-full transition-all"
+                >
+                  <FaChevronRight size={16} />
+                </motion.button>
+              </div>
+
+              {/* DOTS */}
+              <div
+                className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20"
+                onMouseEnter={() => setIsPaused(true)}
+                onMouseLeave={() => setIsPaused(false)}
+              >
+                {services[activeService].images.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setCurrentServiceImage(idx)}
+                    className={`w-2 h-2 rounded-full transition-all ${
+                      idx === currentServiceImage
+                        ? "bg-yellow-500 w-3 h-3"
+                        : "bg-white/50 hover:bg-white"
+                    }`}
+                    aria-label={`Go to image ${idx + 1}`}
+                  />
                 ))}
+              </div>
             </motion.div>
           </div>
         </div>
@@ -431,6 +762,7 @@ const ServicesSection = () => {
     </section>
   );
 };
+
 
 // Standard House Sizes Section
 const HouseSizesSection = () => {
@@ -573,11 +905,12 @@ const Footer = () => {
       className="bg-blue-900 text-white py-16"
     >
       <div className="container mx-auto px-4 lg:px-16">
-        <div className="grid md:grid-cols-4 gap-12 mb-10">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-10">
+
           {/* Logo & Description */}
           <div className="md:col-span-1">
             <h3 className="text-3xl font-extrabold tracking-wider mb-4">
-              RR<span className="text-yellow-500">Architectures</span>
+              RR<span className="text-yellow-500">Architects</span>
             </h3>
             <p className="text-gray-300 mb-6 text-sm">
               Creating beautiful home designs tailored to your dreams and needs.
@@ -651,7 +984,7 @@ const Footer = () => {
         {/* Bottom row: copyright text + privacy policy/terms links */}
         <div className="border-t border-blue-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
           <p className="text-gray-400 mb-4 md:mb-0">
-            © {new Date().getFullYear()} RR Architechts. All rights reserved.
+            © {new Date().getFullYear()} RR Architects. All rights reserved.
           </p>
           <div className="flex gap-6">
             <a href="#" className="text-gray-400 hover:text-yellow-500 transition" data-cursor-hover="true">
