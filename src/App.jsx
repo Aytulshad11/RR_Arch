@@ -910,7 +910,9 @@ const SuccessStories = () => {
     text: "The 3D visualization of our house helped us make better decisions before construction. The final result matches exactly what was shown in the renders. Highly recommended!",
   },
 ];
-  
+
+
+  // Navigation handlers
   const handleNext = () => {
     setDirection(1);
     setIndex((prev) => (prev + 1) % testimonials.length);
@@ -921,30 +923,25 @@ const SuccessStories = () => {
     setIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
 
-  // Auto slide every 5 seconds
+  // Auto slide
   useEffect(() => {
-    const interval = setInterval(() => handleNext(), 5000);
+    const interval = setInterval(() => handleNext(), 6000);
     return () => clearInterval(interval);
   }, []);
 
-  // --- Touch / swipe support ---
+  // Swipe support
   const startX = useRef(0);
-  const handleTouchStart = (e) => {
-    startX.current = e.touches[0].clientX;
-  };
+  const handleTouchStart = (e) => (startX.current = e.touches[0].clientX);
   const handleTouchEnd = (e) => {
-    const endX = e.changedTouches[0].clientX;
-    const diff = startX.current - endX;
-    if (Math.abs(diff) > 50) {
-      diff > 0 ? handleNext() : handlePrev();
-    }
+    const diff = startX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) diff > 0 ? handleNext() : handlePrev();
   };
 
-  // Determine number of cards to show
+  // Responsive: show 1 or 2 items
   const isMobile = window.innerWidth < 768;
   const itemsToShow = isMobile ? 1 : 2;
 
-  // Slice visible testimonials
+  // Get visible testimonials
   const visibleTestimonials = [];
   for (let i = 0; i < itemsToShow; i++) {
     visibleTestimonials.push(testimonials[(index + i) % testimonials.length]);
@@ -954,14 +951,14 @@ const SuccessStories = () => {
     <section
       id="testimonials"
       ref={ref}
-      className="py-24 bg-gradient-to-b from-white to-blue-50 relative overflow-hidden"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
+      className="py-24 bg-gradient-to-b from-white to-blue-50 relative overflow-hidden"
     >
       <div className="container mx-auto px-4 lg:px-16 relative z-10">
-        {/* Heading */}
+        {/* Header */}
         <motion.div
-          initial={{ y: 50, opacity: 0 }}
+          initial={{ y: 40, opacity: 0 }}
           animate={isInView ? { y: 0, opacity: 1 } : {}}
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
@@ -974,29 +971,25 @@ const SuccessStories = () => {
           </p>
         </motion.div>
 
-        {/* Navigation */}
-        <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 hidden md:flex">
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            onClick={handlePrev}
-            className="bg-white shadow-md p-3 rounded-full text-blue-900 hover:bg-blue-100"
-          >
-            <FaChevronLeft size={18} />
-          </motion.button>
-        </div>
+        {/* Arrows */}
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          onClick={handlePrev}
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg p-3 rounded-full text-blue-900 hover:bg-blue-100 hidden md:flex"
+        >
+          <FaChevronLeft size={18} />
+        </motion.button>
 
-        <div className="absolute right-4 top-1/2 -translate-y-1/2 z-10 hidden md:flex">
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            onClick={handleNext}
-            className="bg-white shadow-md p-3 rounded-full text-blue-900 hover:bg-blue-100"
-          >
-            <FaChevronRight size={18} />
-          </motion.button>
-        </div>
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          onClick={handleNext}
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg p-3 rounded-full text-blue-900 hover:bg-blue-100 hidden md:flex"
+        >
+          <FaChevronRight size={18} />
+        </motion.button>
 
-        {/* Testimonials */}
-        <div className="flex justify-center items-stretch gap-8 overflow-hidden">
+        {/* Cards */}
+        <div className="flex justify-center items-stretch gap-8 overflow-hidden min-h-[350px]">
           <AnimatePresence initial={false} custom={direction}>
             {visibleTestimonials.map((testimonial) => (
               <motion.div
@@ -1006,36 +999,45 @@ const SuccessStories = () => {
                   enter: (dir) => ({
                     x: dir > 0 ? 100 : -100,
                     opacity: 0,
+                    scale: 0.98,
                   }),
-                  center: { x: 0, opacity: 1 },
+                  center: { x: 0, opacity: 1, scale: 1 },
                   exit: (dir) => ({
                     x: dir > 0 ? -100 : 100,
                     opacity: 0,
+                    scale: 0.98,
                   }),
                 }}
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{ duration: 0.6 }}
-                className="w-full md:w-[45%] bg-white rounded-2xl shadow-lg p-8 border border-blue-100 flex flex-col"
+                transition={{
+                  duration: 0.6,
+                  type: "spring",
+                  stiffness: 80,
+                  damping: 15,
+                }}
+                className="w-full md:w-[45%] bg-white rounded-2xl shadow-lg p-8 border border-blue-100 flex flex-col justify-between"
               >
-                <FaQuoteLeft className="text-blue-600 text-3xl mb-4 opacity-80" />
-                <div className="flex mb-3">
-                  {[...Array(5)].map((_, i) => (
-                    <FaStar
-                      key={i}
-                      className={
-                        i < testimonial.rating
-                          ? "text-yellow-400"
-                          : "text-gray-300"
-                      }
-                      size={18}
-                    />
-                  ))}
+                <div>
+                  <FaQuoteLeft className="text-blue-600 text-3xl mb-4 opacity-80" />
+                  <div className="flex mb-3">
+                    {[...Array(5)].map((_, i) => (
+                      <FaStar
+                        key={i}
+                        className={
+                          i < testimonial.rating
+                            ? "text-yellow-400"
+                            : "text-gray-300"
+                        }
+                        size={18}
+                      />
+                    ))}
+                  </div>
+                  <p className="text-gray-700 italic mb-6 leading-relaxed">
+                    "{testimonial.text}"
+                  </p>
                 </div>
-                <p className="text-gray-700 italic mb-6 leading-relaxed">
-                  "{testimonial.text}"
-                </p>
                 <div className="flex items-center mt-auto">
                   <img
                     src={testimonial.avatar}
@@ -1061,8 +1063,15 @@ const SuccessStories = () => {
 };
 
 
+
 // Why Choose Us Section
-const AnimatedNumber = ({ target, duration = 2000 }) => {
+
+
+const WhyChooseUsSection = () => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  const AnimatedNumber = ({ target, duration = 2000 }) => {
   const [count, setCount] = useState(0);
   const ref = useRef();
 
@@ -1093,10 +1102,6 @@ const AnimatedNumber = ({ target, duration = 2000 }) => {
     </span>
   );
 };
-
-const WhyChooseUsSection = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   // Parallax background effect
   const scrollRef = useRef(null);
