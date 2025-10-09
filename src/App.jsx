@@ -49,7 +49,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion,  AnimatePresence, useInView, useScroll, useTransform } from 'framer-motion';
-import { FaPhone, FaWhatsapp, FaMapMarkerAlt, FaEnvelope, FaFacebook, FaTwitter, FaChevronLeft, FaInstagram, FaLinkedin, FaBars, FaTimes, FaRulerCombined, FaCheckCircle, FaChevronRight } from 'react-icons/fa';
+import { FaPhone, FaWhatsapp,FaQuoteLeft , FaStar , FaMapMarkerAlt, FaEnvelope, FaFacebook, FaTwitter, FaChevronLeft, FaInstagram, FaLinkedin, FaBars, FaTimes, FaRulerCombined, FaCheckCircle, FaChevronRight } from 'react-icons/fa';
 
 import Logo from '../src/assets/Logo_1.png'; // Ensure you have a logo image in the specified path
 // Custom Cursor Component
@@ -347,7 +347,7 @@ const HeroSection = () => {
         className="fixed right-6 bottom-24 z-40 flex flex-col gap-4"
       >
         <motion.a
-          href="tel:+1234567890"
+          href="tel:+918989119503"
           whileHover={{ scale: 1.1, boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)' }}
           className="w-14 h-14 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg"
           data-cursor-hover="true"
@@ -355,7 +355,7 @@ const HeroSection = () => {
           <FaPhone size={24} />
         </motion.a>
         <motion.a
-          href="https://wa.me/1234567890"
+          href="https://wa.me/+918989119503"
           whileHover={{ scale: 1.1, boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)' }}
           className="w-14 h-14 bg-green-500 text-white rounded-full flex items-center justify-center shadow-lg"
           data-cursor-hover="true"
@@ -509,47 +509,56 @@ const ServicesSection = () => {
   const { scrollYProgress } = useScroll({ target: scrollRef });
   const y = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
 
+  // inside ServicesSection.jsx (top of file)
+// const floorPlanImages = Object.values(import.meta.glob('../src/assets/aytul/floor-plans/*.{jpg,jpeg,png,webp}', { eager: true, import: 'default' }));
+// const elevationImages = Object.values(import.meta.glob('../src/assets/aytul/elevation/*.{jpg,jpeg,png,webp}', { eager: true, import: 'default' }));
+// const interiorImages = Object.values(import.meta.glob('../src/assets/aytul/interior/*.{jpg,jpeg,png,webp}', { eager: true, import: 'default' }));
+
+  const floorPlanImages = Object.values(
+  import.meta.glob('/src/assets/aytul/floor-plans/*.{jpg,jpeg,png,webp}', { eager: true, import: 'default' })
+).map((path) => new URL(path, import.meta.url).href);
+
+const elevationImages = Object.values(
+  import.meta.glob('/src/assets/aytul/elevation/*.{jpg,jpeg,png,webp}', { eager: true, import: 'default' })
+).map((path) => new URL(path, import.meta.url).href);
+
+const interiorImages = Object.values(
+  import.meta.glob('/src/assets/aytul/interior/*.{jpg,jpeg,png,webp}', { eager: true, import: 'default' })
+).map((path) => new URL(path, import.meta.url).href);
+
+  const landscapeImages = Object.values(
+  import.meta.glob('/src/assets/aytul/landscape/*.{jpg,jpeg,png,webp}', { eager: true, import: 'default' })
+).map((path) => new URL(path, import.meta.url).href);
+
+  console.log('landsca Images:', landscapeImages);
+ 
   const services = [
-    {
-      name: "Plans",
-      images: [
-        'https://images.pexels.com/photos/186077/pexels-photo-186077.jpeg?auto=compress&cs=tinysrgb&w=800',
-        "https://images.pexels.com/photos/7269150/pexels-photo-7269150.jpeg?auto=compress&cs=tinysrgb&w=800",
-        "https://images.pexels.com/photos/439227/pexels-photo-439227.jpeg?auto=compress&cs=tinysrgb&w=800",
-      ],
-      description:
-        "Detailed 2D floor plans and layout drawings for construction permits and efficient space utilization.",
-    },
-    {
-      name: "Elevation",
-      images: [
-        "https://images.pexels.com/photos/258163/pexels-photo-258163.jpeg?auto=compress&cs=tinysrgb&w=800",
-        "https://images.pexels.com/photos/2080962/pexels-photo-2080962.jpeg?auto=compress&cs=tinysrgb&w=800",
-        "https://images.pexels.com/photos/2097721/pexels-photo-2097721.jpeg?auto=compress&cs=tinysrgb&w=800",
-      ],
-      description:
-        "Stunning 3D exterior views (front, rear, side) showing materials, finishes, and architectural details.",
-    },
-    {
-      name: "Interior",
-      images: [
-        "https://images.pexels.com/photos/1643384/pexels-photo-1643384.jpeg?auto=compress&cs=tinysrgb&w=800",
-        "https://images.pexels.com/photos/6322046/pexels-photo-6322046.jpeg?auto=compress&cs=tinysrgb&w=800",
-        "https://images.pexels.com/photos/439227/pexels-photo-439227.jpeg?auto=compress&cs=tinysrgb&w=800",
-      ],
-      description:
-        "Complete interior design, including furniture layout, material selection, lighting, and 3D rendering.",
-    },
-    {
-      name: "Landscape",
-      images: [
-       'https://images.pexels.com/photos/210186/pexels-photo-210186.jpeg?auto=compress&cs=tinysrgb&w=800',
-        "https://images.pexels.com/photos/1393649/pexels-photo-1393649.jpeg?auto=compress&cs=tinysrgb&w=800",
-      ],
-      description:
-        "Creative and functional outdoor space design, including gardens, patios, and pool areas.",
-    },
-  ];
+  {
+    name: "Plans",
+    images: floorPlanImages,
+    description:
+      "Detailed 2D floor plans and layout drawings for construction permits and efficient space utilization.",
+  },
+  {
+    name: "Elevation",
+    images: elevationImages,
+    description:
+      "Stunning 3D exterior views (front, rear, side) showing materials, finishes, and architectural details.",
+  },
+  {
+    name: "Interior",
+    images: interiorImages,
+    description:
+      "Complete interior design, including furniture layout, material selection, lighting, and 3D rendering.",
+  },
+  {
+    name: "Landscape",
+    images: landscapeImages,
+    description:
+      "Creative and functional outdoor space design, including gardens, patios, and pool areas.",
+  },
+];
+
 
   // --- URL Sync ---
 useEffect(() => {
@@ -695,24 +704,29 @@ useEffect(() => {
               className="relative h-[350px] md:h-[600px] rounded-2xl overflow-hidden shadow-2xl z-0 bg-gray-200"
               style={{ y }}
             >
-              <AnimatePresence initial={false} custom={currentServiceImage}>
-                <motion.div
-                  key={currentServiceImage}
-                  custom={1}
-                  variants={variants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  transition={{
-                    x: { type: "spring", stiffness: 300, damping: 30 },
-                    opacity: { duration: 0.5 },
-                  }}
-                  className="absolute inset-0 bg-cover bg-center pointer-events-none"
-                  style={{
-                    backgroundImage: `url(${services[activeService].images[currentServiceImage]})`,
-                  }}
-                />
-              </AnimatePresence>
+             <AnimatePresence initial={false} custom={currentServiceImage}>
+  <motion.div
+    key={`${activeService}-${currentServiceImage}`} // ✅ unique per service
+    custom={1}
+    variants={variants}
+    initial="enter"
+    animate="center"
+    exit="exit"
+    transition={{
+      x: { type: "spring", stiffness: 300, damping: 30 },
+      opacity: { duration: 0.5 },
+    }}
+    className="absolute inset-0 bg-contain bg-center bg-no-repeat pointer-events-none"
+   style={{
+  backgroundImage: `url("${services[activeService].images[currentServiceImage]}")`,
+  backgroundSize: "contain",
+  backgroundPosition: "center",
+  backgroundRepeat: "no-repeat",
+  backgroundColor: "#f3f4f6",
+}}
+
+  />
+</AnimatePresence>
 
               {/* ARROWS */}
               <div className="absolute inset-0 flex items-center justify-between p-4 z-20">
@@ -769,30 +783,35 @@ const HouseSizesSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-150px' });
 
+
+  const sizeImages = Object.values(
+  import.meta.glob("../src/assets/aytul/sizes/*.{jpg,jpeg,png,webp}", { eager: true, import: "default" })
+);
+
   const sizes = [
     {
       size: '20x40',
       sqft: '800 sq ft',
       desc: 'Compact urban living',
-      img: 'https://images.pexels.com/photos/208736/pexels-photo-208736.jpeg?auto=compress&cs=tinysrgb&w=600'
+      img: sizeImages[0]
     },
     {
       size: '30x60',
       sqft: '1800 sq ft',
       desc: 'Perfect family home',
-      img: 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=600'
+      img: sizeImages[1]
     },
     {
       size: '40x80',
       sqft: '3200 sq ft',
       desc: 'Spacious luxury living',
-      img: 'https://images.pexels.com/photos/259751/pexels-photo-259751.jpeg?auto=compress&cs=tinysrgb&w=600'
+      img: sizeImages[2]
     },
     {
       size: '60x90',
       sqft: '5400 sq ft',
       desc: 'Premium estate design',
-      img: 'https://images.pexels.com/photos/279810/pexels-photo-279810.jpeg?auto=compress&cs=tinysrgb&w=600'
+      img: sizeImages[3]
     }
   ];
 
@@ -827,7 +846,7 @@ const HouseSizesSection = () => {
                 style={{ backgroundImage: `url(${item.img})` }}
               />
               {/* Dark overlay with text */}
-              <div className="absolute inset-0 bg-blue-900/50 transition-all duration-300 group-hover:bg-blue-900/70" /> 
+              <div className="absolute inset-0 transition-all duration-300 " /> 
               <div className="absolute inset-0 p-6 flex flex-col justify-end text-white">
                 <div className="bg-yellow-500 text-blue-900 w-fit px-4 py-1 rounded-full font-bold mb-3 flex items-center gap-2 text-sm">
                   <FaRulerCombined /> {item.size}
@@ -843,51 +862,359 @@ const HouseSizesSection = () => {
   );
 };
 
-// Why Choose Us Section
-const WhyChooseUsSection = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-100px' });
 
-  const reasons = [
-    'Expert architects with 15+ years of experience',
-    'Customized designs tailored to your lifestyle',
-    '3D visualization before construction begins',
-    'Affordable pricing with transparent quotations'
-  ];
+
+//success stroies
+const SuccessStories = () => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const [index, setIndex] = useState(0);
+  const [direction, setDirection] = useState(1);
+
+
+  const testimonials = [
+  {
+    id: 1,
+    name: "Rajesh Kumar",
+    location: "Delhi",
+    avatar:
+      "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=600",
+    rating: 5,
+    text: "We are extremely satisfied with the house plan designed by DreamHome. The team understood our requirements perfectly and delivered a beautiful design that maximizes space utilization and natural light.",
+  },
+  {
+    id: 2,
+    name: "Priya Sharma",
+    location: "Mumbai",
+    avatar:
+      "https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=600",
+    rating: 5,
+    text: "The elevation design for our bungalow was stunning! Everyone in our neighborhood asks about who designed our house. Thank you for making our dream home stand out.",
+  },
+  {
+    id: 3,
+    name: "Karthik Reddy",
+    location: "Hyderabad",
+    avatar:
+      "https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=600",
+    rating: 4,
+    text: "Working with DreamHome was a breeze. Their interior design suggestions were practical and aesthetically pleasing. Our home feels more spacious and functional now.",
+  },
+  {
+    id: 4,
+    name: "Meera Patel",
+    location: "Ahmedabad",
+    avatar:
+      "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=600",
+    rating: 5,
+    text: "The 3D visualization of our house helped us make better decisions before construction. The final result matches exactly what was shown in the renders. Highly recommended!",
+  },
+];
+  
+  const handleNext = () => {
+    setDirection(1);
+    setIndex((prev) => (prev + 1) % testimonials.length);
+  };
+
+  const handlePrev = () => {
+    setDirection(-1);
+    setIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  };
+
+  // Auto slide every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => handleNext(), 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // --- Touch / swipe support ---
+  const startX = useRef(0);
+  const handleTouchStart = (e) => {
+    startX.current = e.touches[0].clientX;
+  };
+  const handleTouchEnd = (e) => {
+    const endX = e.changedTouches[0].clientX;
+    const diff = startX.current - endX;
+    if (Math.abs(diff) > 50) {
+      diff > 0 ? handleNext() : handlePrev();
+    }
+  };
+
+  // Determine number of cards to show
+  const isMobile = window.innerWidth < 768;
+  const itemsToShow = isMobile ? 1 : 2;
+
+  // Slice visible testimonials
+  const visibleTestimonials = [];
+  for (let i = 0; i < itemsToShow; i++) {
+    visibleTestimonials.push(testimonials[(index + i) % testimonials.length]);
+  }
 
   return (
-    <section id="why-choose-us" ref={ref} className="py-24 bg-white relative overflow-hidden">
+    <section
+      id="testimonials"
+      ref={ref}
+      className="py-24 bg-gradient-to-b from-white to-blue-50 relative overflow-hidden"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       <div className="container mx-auto px-4 lg:px-16 relative z-10">
+        {/* Heading */}
         <motion.div
           initial={{ y: 50, opacity: 0 }}
           animate={isInView ? { y: 0, opacity: 1 } : {}}
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-blue-900 mb-4">Why Choose Us</h2>
-          <p className="text-xl text-gray-600">Building trust through excellence and innovation</p>
+          <h2 className="text-4xl md:text-5xl font-bold text-blue-900 mb-4">
+            Success Stories
+          </h2>
+          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+            Hear what our clients have to say about their experience with us.
+          </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          {reasons.map((reason, index) => (
-            <motion.div
-              key={index}
-              // Fade-in text animation as section scrolls into view (staggered)
-              initial={{ y: 30, opacity: 0 }}
-              animate={isInView ? { y: 0, opacity: 1 } : {}}
-              transition={{ delay: index * 0.15, duration: 0.5 }}
-              className="flex items-start gap-4 bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow"
-              data-cursor-hover="true"
-            >
-              <FaCheckCircle className="text-yellow-500 text-3xl flex-shrink-0 mt-1" />
-              <p className="text-lg text-gray-800 font-medium">{reason}</p>
-            </motion.div>
-          ))}
+        {/* Navigation */}
+        <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 hidden md:flex">
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            onClick={handlePrev}
+            className="bg-white shadow-md p-3 rounded-full text-blue-900 hover:bg-blue-100"
+          >
+            <FaChevronLeft size={18} />
+          </motion.button>
+        </div>
+
+        <div className="absolute right-4 top-1/2 -translate-y-1/2 z-10 hidden md:flex">
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            onClick={handleNext}
+            className="bg-white shadow-md p-3 rounded-full text-blue-900 hover:bg-blue-100"
+          >
+            <FaChevronRight size={18} />
+          </motion.button>
+        </div>
+
+        {/* Testimonials */}
+        <div className="flex justify-center items-stretch gap-8 overflow-hidden">
+          <AnimatePresence initial={false} custom={direction}>
+            {visibleTestimonials.map((testimonial) => (
+              <motion.div
+                key={testimonial.id}
+                custom={direction}
+                variants={{
+                  enter: (dir) => ({
+                    x: dir > 0 ? 100 : -100,
+                    opacity: 0,
+                  }),
+                  center: { x: 0, opacity: 1 },
+                  exit: (dir) => ({
+                    x: dir > 0 ? -100 : 100,
+                    opacity: 0,
+                  }),
+                }}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.6 }}
+                className="w-full md:w-[45%] bg-white rounded-2xl shadow-lg p-8 border border-blue-100 flex flex-col"
+              >
+                <FaQuoteLeft className="text-blue-600 text-3xl mb-4 opacity-80" />
+                <div className="flex mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <FaStar
+                      key={i}
+                      className={
+                        i < testimonial.rating
+                          ? "text-yellow-400"
+                          : "text-gray-300"
+                      }
+                      size={18}
+                    />
+                  ))}
+                </div>
+                <p className="text-gray-700 italic mb-6 leading-relaxed">
+                  "{testimonial.text}"
+                </p>
+                <div className="flex items-center mt-auto">
+                  <img
+                    src={testimonial.avatar}
+                    alt={testimonial.name}
+                    className="w-12 h-12 rounded-full object-cover mr-4 border-2 border-blue-200"
+                  />
+                  <div>
+                    <h4 className="font-semibold text-blue-900">
+                      {testimonial.name}
+                    </h4>
+                    <p className="text-gray-500 text-sm">
+                      {testimonial.location}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       </div>
     </section>
   );
 };
+
+
+// Why Choose Us Section
+const AnimatedNumber = ({ target, duration = 2000 }) => {
+  const [count, setCount] = useState(0);
+  const ref = useRef();
+
+  useEffect(() => {
+    let start = 0;
+    const end = parseInt(target.replace(/\D/g, ""), 10); // remove + sign etc
+    if (start === end) return;
+
+    let totalMilSecDur = parseInt(duration);
+    let incrementTime = 30;
+    let step = Math.ceil((end - start) / (totalMilSecDur / incrementTime));
+
+    const timer = setInterval(() => {
+      start += step;
+      if (start >= end) {
+        start = end;
+        clearInterval(timer);
+      }
+      setCount(start);
+    }, incrementTime);
+
+    return () => clearInterval(timer);
+  }, [target, duration]);
+
+  return (
+    <span ref={ref}>
+      {count.toLocaleString()}+
+    </span>
+  );
+};
+
+const WhyChooseUsSection = () => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  // Parallax background effect
+  const scrollRef = useRef(null);
+  const { scrollYProgress } = useScroll({ target: scrollRef });
+  const y = useTransform(scrollYProgress, [0, 1], ["-5%", "5%"]);
+
+  const stats = [
+    { number: "3500", label: "Plans Completed" },
+    { number: "2500", label: "Elevations Designed" },
+    { number: "2000", label: "Interiors Completed" },
+    { number: "1500", label: "Bungalows Designed" },
+    { number: "1300", label: "Commercial Projects" },
+  ];
+
+  const reasons = [
+    "Expert architects with 15+ years of experience",
+    "Customized designs tailored to your lifestyle",
+    "3D visualization before construction begins",
+    "Affordable pricing with transparent quotations",
+    "Online drawings & on-site visit facility",
+    "Vastu-compliant planning for peace and prosperity",
+    "Detailed technical drawings that save time and cost",
+    "End-to-end support from start to finish",
+  ];
+
+  return (
+    <section
+      id="why-choose-us"
+      ref={ref}
+      className="relative py-24 bg-gradient-to-b from-white to-blue-50 overflow-hidden"
+    >
+      {/* Parallax Background */}
+      <motion.div
+        ref={scrollRef}
+        className="absolute inset-0 bg-cover bg-center"
+        style={{
+          y,
+          backgroundImage:
+            "url('https://images.pexels.com/photos/271816/pexels-photo-271816.jpeg')",
+          opacity: 0.1,
+        }}
+      ></motion.div>
+
+      <div className="relative z-10 container mx-auto px-4 lg:px-16">
+        {/* Heading */}
+        <motion.div
+          initial={{ y: 50, opacity: 0 }}
+          animate={isInView ? { y: 0, opacity: 1 } : {}}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-4xl md:text-5xl font-bold text-blue-900 mb-4">
+            Why Choose Us
+          </h2>
+          <p className="text-lg md:text-xl text-gray-600">
+            Building trust through excellence and innovation
+          </p>
+        </motion.div>
+
+        {/* Stats Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 text-center mb-16"
+        >
+          {stats.map((item, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.1 * index }}
+              className="p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300"
+            >
+              <div className="text-3xl md:text-4xl font-extrabold text-blue-800">
+                {isInView && <AnimatedNumber target={item.number} />}
+              </div>
+              <div className="text-sm md:text-base text-gray-600 mt-1">
+                {item.label}
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Reasons Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="bg-white p-8 md:p-12 rounded-2xl shadow-xl max-w-5xl mx-auto"
+        >
+          <h3 className="text-2xl md:text-3xl font-semibold mb-8 text-blue-900 text-center">
+            Reasons to Choose Our Services
+          </h3>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {reasons.map((reason, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.1 * index, duration: 0.5 }}
+                className="flex items-start gap-4 bg-blue-50 hover:bg-blue-100 p-4 rounded-lg transition-colors duration-300"
+                data-cursor-hover="true"
+              >
+                <FaCheckCircle className="text-blue-700 text-2xl mt-1 flex-shrink-0" />
+                <p className="text-base md:text-lg text-gray-800 font-medium">
+                  {reason}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
 
 // Footer Component
 const Footer = () => {
@@ -916,13 +1243,13 @@ const Footer = () => {
               Creating beautiful home designs tailored to your dreams and needs.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="text-gray-300 hover:text-yellow-500 transition" data-cursor-hover="true">
+              <a href="https://www.facebook.com/profile.php?id=61581785843692 " className="text-gray-300 hover:text-yellow-500 transition" data-cursor-hover="true">
                 <FaFacebook size={24} />
               </a>
               <a href="#" className="text-gray-300 hover:text-yellow-500 transition" data-cursor-hover="true">
                 <FaTwitter size={24} />
               </a>
-              <a href="https://instagram.com/rrachitect.home/" className="text-gray-300 hover:text-yellow-500 transition" data-cursor-hover="true">
+              <a href="https://instagram.com/rranpindore4/" className="text-gray-300 hover:text-yellow-500 transition" data-cursor-hover="true">
                 <FaInstagram size={24} />
               </a>
               <a href="#" className="text-gray-300 hover:text-yellow-500 transition" data-cursor-hover="true">
@@ -955,15 +1282,18 @@ const Footer = () => {
             <div className="space-y-3 text-sm">
               <div className="flex items-center gap-3">
                 <FaPhone className="text-yellow-500" />
-                <a href="tel:+11234567890" className="text-gray-300 hover:text-white transition" data-cursor-hover="true">+1 (123) 456-7890</a>
+                <a href="tel:+918989119503" className="text-gray-300 hover:text-white transition" data-cursor-hover="true">+91-8989119503
+</a>
               </div>
               <div className="flex items-center gap-3">
                 <FaEnvelope className="text-yellow-500" />
-                <a href="mailto:info@firstspace.com" className="text-gray-300 hover:text-white transition" data-cursor-hover="true">info@rrarchitechts.com</a>
+                <a href="mailto:rranpindore@gmail.com" className="text-gray-300 hover:text-white transition" data-cursor-hover="true">rranpindore@gmail.com
+</a>
               </div>
               <div className="flex items-center gap-3">
                 <FaWhatsapp className="text-yellow-500" />
-                <a href="https://wa.me/1234567890" className="text-gray-300 hover:text-white transition" data-cursor-hover="true">WhatsApp: +1 (123) 456-7890</a>
+                <a href="https://wa.me/+918989119503
+" className="text-gray-300 hover:text-white transition" data-cursor-hover="true">WhatsApp: +918989119503</a>
               </div>
             </div>
           </div>
@@ -974,9 +1304,11 @@ const Footer = () => {
             <div className="flex items-start gap-3 text-sm">
               <FaMapMarkerAlt className="text-yellow-500 mt-1 flex-shrink-0" />
               <p className="text-gray-300">
-                123 Dream Home Street,<br />
-                Architecture City, AC 12345
+                832, Old Loha Mandi ,<br />
+                Opp. to Devshree Talkies,<br />
+                Indore, Madhya Pradesh, India
               </p>
+
             </div>
           </div>
         </div>
@@ -1019,6 +1351,7 @@ export default function App() {
       <HeroSection />
       <ServicesSection />
       <HouseSizesSection />
+      <SuccessStories />
       <WhyChooseUsSection />
       <Footer />
     </div>
