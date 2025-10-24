@@ -269,67 +269,90 @@ const Header = () => {
   );
 };
 
-// Hero Section
+
 const HeroSection = () => {
+  // ✅ Import all images dynamically
+const elevationImages = Object.values(
+  import.meta.glob("/src/assets/aytul/elevation/*.{jpg,jpeg,png,webp}", {
+    eager: true,
+    import: "default",
+  })
+);
+const interiorImages = Object.values(
+  import.meta.glob("/src/assets/aytul/interior/*.{jpg,jpeg,png,webp}", {
+    eager: true,
+    import: "default",
+  })
+);
+
+// ✅ Combine elevation + interior images (use first 3 from each)
+const images = [...elevationImages.slice(0, 3), ...interiorImages.slice(0, 3)];
+
   const [currentImage, setCurrentImage] = useState(0);
-   const images = [
-    'https://images.pexels.com/photos/323705/pexels-photo-323705.jpeg?auto=compress&cs=tinysrgb&w=1920',
-    'https://images.pexels.com/photos/1732414/pexels-photo-1732414.jpeg?auto=compress&cs=tinysrgb&w=1920',
-    'https://images.pexels.com/photos/1105766/pexels-photo-1105766.jpeg?auto=compress&cs=tinysrgb&w=1920',
-    'https://images.pexels.com/photos/2587054/pexels-photo-2587054.jpeg?auto=compress&cs=tinysrgb&w=1920'
-  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % images.length);
-    }, 5000); // 5s slide
+    }, 5000); // 5s per slide
     return () => clearInterval(interval);
   }, []);
 
   const contentRef = useRef(null);
-  const isInView = useInView(contentRef, { once: true }); // For text fade-up on scroll (though mainly for initial load here)
+  const isInView = useInView(contentRef, { once: true });
 
   return (
-    <section id="home" className="relative h-screen min-h-[700px] flex items-center overflow-hidden">
-      {/* Background Slideshow (Banner images fade + slide transition) */}
+    <section
+      id="home"
+      className="relative h-screen min-h-[700px] flex items-center overflow-hidden"
+    >
+      {/* Background Slideshow */}
       {images.map((img, index) => (
         <motion.div
           key={index}
           initial={{ opacity: 0, scale: 1.1 }}
           animate={{
             opacity: index === currentImage ? 1 : 0,
-            scale: index === currentImage ? 1 : 1.1 // Subtle slide effect
+            scale: index === currentImage ? 1 : 1.1,
           }}
-          transition={{ duration: 1.5 }}
+          transition={{ duration: 1.5, ease: "easeInOut" }}
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${img})` }}
+          style={{ backgroundImage: `url("${img}")` }}
         >
-          {/* Deeper navy blue overlay */}
-          <div className="absolute inset-0" /> 
+          {/* Subtle overlay for better text visibility */}
+          <div className="absolute inset-0 bg-black/40"></div>
         </motion.div>
       ))}
 
-      {/* Content */}
-      <div ref={contentRef} className="container mx-auto px-4 lg:px-16 relative z-10">
+      {/* Hero Content */}
+      <div
+        ref={contentRef}
+        className="container mx-auto px-4 lg:px-16 relative z-10"
+      >
         <motion.div
           initial={{ y: 50, opacity: 0 }}
           animate={isInView ? { y: 0, opacity: 1 } : { y: 50, opacity: 0 }}
           transition={{ delay: 0.3, duration: 0.8 }}
           className="max-w-4xl"
         >
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold text-white leading-tight mb-6 tracking-tight">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold text-white leading-tight mb-6 tracking-tight drop-shadow-lg">
             Build Your Dream Home
           </h1>
-          <p className="text-xl md:text-2xl text-gray-200 mb-10 max-w-2xl font-light">
-            Premium house designs, elevations, and interior planning services customized for your specific needs.
+          <p className="text-xl md:text-2xl text-gray-200 mb-10 max-w-2xl font-light drop-shadow-md">
+            Premium house designs, elevations, and interior planning services
+            customized for your specific needs.
           </p>
           <motion.a
             href="#footer"
             onClick={(e) => {
               e.preventDefault();
-              document.querySelector('#footer').scrollIntoView({ behavior: 'smooth' });
+              document
+                .querySelector("#footer")
+                .scrollIntoView({ behavior: "smooth" });
             }}
-            whileHover={{ scale: 1.05, boxShadow: '0 10px 20px rgba(212, 175, 55, 0.4)' }}
+            whileHover={{
+              scale: 1.05,
+              boxShadow: "0 10px 20px rgba(212, 175, 55, 0.4)",
+            }}
             whileTap={{ scale: 0.95 }}
             className="inline-block bg-yellow-500 text-blue-900 px-10 py-4 rounded-full font-bold text-lg shadow-2xl transition-all"
             data-cursor-hover="true"
@@ -339,24 +362,31 @@ const HeroSection = () => {
         </motion.div>
       </div>
 
-      {/* Floating Buttons (Phone and WhatsApp with hover animations) */}
+      {/* Floating Phone & WhatsApp Buttons */}
       <motion.div
         initial={{ x: 100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
-        transition={{ delay: 0.8, type: 'spring', stiffness: 100 }}
+        transition={{ delay: 0.8, type: "spring", stiffness: 100 }}
         className="fixed right-6 bottom-24 z-40 flex flex-col gap-4"
       >
         <motion.a
           href="tel:+918989119503"
-          whileHover={{ scale: 1.1, boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)' }}
+          whileHover={{
+            scale: 1.1,
+            boxShadow: "0 4px 15px rgba(0, 0, 0, 0.2)",
+          }}
           className="w-14 h-14 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg"
           data-cursor-hover="true"
         >
           <FaPhone size={24} />
         </motion.a>
+
         <motion.a
           href="https://wa.me/+918989119503"
-          whileHover={{ scale: 1.1, boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)' }}
+          whileHover={{
+            scale: 1.1,
+            boxShadow: "0 4px 15px rgba(0, 0, 0, 0.2)",
+          }}
           className="w-14 h-14 bg-green-500 text-white rounded-full flex items-center justify-center shadow-lg"
           data-cursor-hover="true"
         >
