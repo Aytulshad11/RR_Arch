@@ -1284,7 +1284,7 @@ const Footer = () => {
               <a href="#" className="text-gray-300 hover:text-yellow-500 transition" data-cursor-hover="true">
                 <FaTwitter size={24} />
               </a>
-              <a href="https://instagram.com/rranpindore4/" className="text-gray-300 hover:text-yellow-500 transition" data-cursor-hover="true">
+              <a href="https://www.instagram.com/rr_architects_planner/" className="text-gray-300 hover:text-yellow-500 transition" data-cursor-hover="true">
                 <FaInstagram size={24} />
               </a>
               <a href="#" className="text-gray-300 hover:text-yellow-500 transition" data-cursor-hover="true">
