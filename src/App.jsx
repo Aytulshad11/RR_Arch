@@ -1339,11 +1339,10 @@ const Footer = () => {
             <div className="flex items-start gap-3 text-sm">
               <FaMapMarkerAlt className="text-yellow-500 mt-1 flex-shrink-0" />
               <p className="text-gray-300">
-                832, Old Loha Mandi ,<br />
-                Opp. to Devshree Talkies,<br />
-                Indore, Madhya Pradesh, India
+                303, Apollo Avenue ,<br />
+                Old Palasia Square,<br />
+                Indore - 452001, Madhya Pradesh
               </p>
-
             </div>
           </div>
         </div>
