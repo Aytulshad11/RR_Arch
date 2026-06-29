@@ -362,35 +362,56 @@ const images = [...elevationImages.slice(0, 3), ...interiorImages.slice(0, 3)];
         </motion.div>
       </div>
 
-      {/* Floating Phone & WhatsApp Buttons */}
+      {/* Floating Contact & Social Buttons */}
       <motion.div
         initial={{ x: 100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ delay: 0.8, type: "spring", stiffness: 100 }}
-        className="fixed right-6 bottom-24 z-40 flex flex-col gap-4"
+        className="fixed right-6 bottom-8 z-40 flex flex-col gap-3"
       >
         <motion.a
           href="tel:+918989119503"
-          whileHover={{
-            scale: 1.1,
-            boxShadow: "0 4px 15px rgba(0, 0, 0, 0.2)",
-          }}
-          className="w-14 h-14 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg"
+          whileHover={{ scale: 1.1, boxShadow: "0 4px 15px rgba(0, 0, 0, 0.2)" }}
+          className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg"
           data-cursor-hover="true"
+          title="Call Us"
         >
-          <FaPhone size={24} />
+          <FaPhone size={20} />
         </motion.a>
 
         <motion.a
           href="https://wa.me/+918989119503"
-          whileHover={{
-            scale: 1.1,
-            boxShadow: "0 4px 15px rgba(0, 0, 0, 0.2)",
-          }}
-          className="w-14 h-14 bg-green-500 text-white rounded-full flex items-center justify-center shadow-lg"
+          whileHover={{ scale: 1.1, boxShadow: "0 4px 15px rgba(0, 0, 0, 0.2)" }}
+          className="w-12 h-12 bg-green-500 text-white rounded-full flex items-center justify-center shadow-lg"
           data-cursor-hover="true"
+          title="WhatsApp"
         >
-          <FaWhatsapp size={26} />
+          <FaWhatsapp size={22} />
+        </motion.a>
+
+        <motion.a
+          href="https://www.instagram.com/rrarchitectsplanner/"
+          target="_blank"
+          rel="noopener noreferrer"
+          whileHover={{ scale: 1.1, boxShadow: "0 4px 15px rgba(0, 0, 0, 0.2)" }}
+          className="w-12 h-12 text-white rounded-full flex items-center justify-center shadow-lg"
+          style={{ background: "linear-gradient(135deg, #f9ce34, #ee2a7b, #6228d7)" }}
+          data-cursor-hover="true"
+          title="Instagram"
+        >
+          <FaInstagram size={22} />
+        </motion.a>
+
+        <motion.a
+          href="https://www.facebook.com/profile.php?id=61581785843692"
+          target="_blank"
+          rel="noopener noreferrer"
+          whileHover={{ scale: 1.1, boxShadow: "0 4px 15px rgba(0, 0, 0, 0.2)" }}
+          className="w-12 h-12 bg-[#1877F2] text-white rounded-full flex items-center justify-center shadow-lg"
+          data-cursor-hover="true"
+          title="Facebook"
+        >
+          <FaFacebook size={22} />
         </motion.a>
       </motion.div>
     </section>
@@ -908,16 +929,15 @@ const SuccessStories = () => {
     name: "Rajesh Kumar",
     location: "Delhi",
     avatar:
-      "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=600",
-    rating: 5,
-    text: "We are extremely satisfied with the house plan designed by DreamHome. The team understood our requirements perfectly and delivered a beautiful design that maximizes space utilization and natural light.",
+     "",   rating: 5,
+    text: "We are extremely satisfied with the house plan designed by RR Architects and Planner. The team understood our requirements perfectly and delivered a beautiful design that maximizes space utilization and natural light.",
   },
   {
     id: 2,
     name: "Priya Sharma",
     location: "Mumbai",
     avatar:
-      "https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "",
     rating: 5,
     text: "The elevation design for our bungalow was stunning! Everyone in our neighborhood asks about who designed our house. Thank you for making our dream home stand out.",
   },
@@ -926,16 +946,16 @@ const SuccessStories = () => {
     name: "Karthik Reddy",
     location: "Hyderabad",
     avatar:
-      "https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "",
     rating: 4,
-    text: "Working with DreamHome was a breeze. Their interior design suggestions were practical and aesthetically pleasing. Our home feels more spacious and functional now.",
+    text: "Working with RR Architects and Planner was a breeze. Their interior design suggestions were practical and aesthetically pleasing. Our home feels more spacious and functional now.",
   },
   {
     id: 4,
     name: "Meera Patel",
     location: "Ahmedabad",
     avatar:
-      "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=600",
+      "",
     rating: 5,
     text: "The 3D visualization of our house helped us make better decisions before construction. The final result matches exactly what was shown in the renders. Highly recommended!",
   },
@@ -1019,72 +1039,62 @@ const SuccessStories = () => {
         </motion.button>
 
         {/* Cards */}
-        <div className="flex justify-center items-stretch gap-8 overflow-hidden min-h-[350px]">
+        <div className="relative overflow-hidden min-h-[350px]">
           <AnimatePresence initial={false} custom={direction}>
-            {visibleTestimonials.map((testimonial) => (
-              <motion.div
-                key={testimonial.id}
-                custom={direction}
-                variants={{
-                  enter: (dir) => ({
-                    x: dir > 0 ? 100 : -100,
-                    opacity: 0,
-                    scale: 0.98,
-                  }),
-                  center: { x: 0, opacity: 1, scale: 1 },
-                  exit: (dir) => ({
-                    x: dir > 0 ? -100 : 100,
-                    opacity: 0,
-                    scale: 0.98,
-                  }),
-                }}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{
-                  duration: 0.6,
-                  type: "spring",
-                  stiffness: 80,
-                  damping: 15,
-                }}
-                className="w-full md:w-[45%] bg-white rounded-2xl shadow-lg p-8 border border-blue-100 flex flex-col justify-between"
-              >
-                <div>
-                  <FaQuoteLeft className="text-blue-600 text-3xl mb-4 opacity-80" />
-                  <div className="flex mb-3">
-                    {[...Array(5)].map((_, i) => (
-                      <FaStar
-                        key={i}
-                        className={
-                          i < testimonial.rating
-                            ? "text-yellow-400"
-                            : "text-gray-300"
-                        }
-                        size={18}
-                      />
-                    ))}
-                  </div>
-                  <p className="text-gray-700 italic mb-6 leading-relaxed">
-                    "{testimonial.text}"
-                  </p>
-                </div>
-                <div className="flex items-center mt-auto">
-                  <img
-                    src={testimonial.avatar}
-                    alt={testimonial.name}
-                    className="w-12 h-12 rounded-full object-cover mr-4 border-2 border-blue-200"
-                  />
+            <motion.div
+              key={index}
+              custom={direction}
+              variants={{
+                enter: (dir) => ({ x: dir > 0 ? "100%" : "-100%", opacity: 0 }),
+                center: { x: 0, opacity: 1 },
+                exit: (dir) => ({ x: dir > 0 ? "-100%" : "100%", opacity: 0 }),
+              }}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ type: "tween", ease: "easeInOut", duration: 0.5 }}
+              className="absolute inset-0 flex justify-center items-stretch gap-8"
+            >
+              {visibleTestimonials.map((testimonial) => (
+                <div
+                  key={testimonial.id}
+                  className="w-full md:w-[45%] bg-white rounded-2xl shadow-lg p-8 border border-blue-100 flex flex-col justify-between"
+                >
                   <div>
-                    <h4 className="font-semibold text-blue-900">
-                      {testimonial.name}
-                    </h4>
-                    <p className="text-gray-500 text-sm">
-                      {testimonial.location}
+                    <FaQuoteLeft className="text-blue-600 text-3xl mb-4 opacity-80" />
+                    <div className="flex mb-3">
+                      {[...Array(5)].map((_, i) => (
+                        <FaStar
+                          key={i}
+                          className={i < testimonial.rating ? "text-yellow-400" : "text-gray-300"}
+                          size={18}
+                        />
+                      ))}
+                    </div>
+                    <p className="text-gray-700 italic mb-6 leading-relaxed">
+                      "{testimonial.text}"
                     </p>
                   </div>
+                  <div className="flex items-center mt-auto">
+                    {testimonial.avatar ? (
+                      <img
+                        src={testimonial.avatar}
+                        alt={testimonial.name}
+                        className="w-12 h-12 rounded-full object-cover mr-4 border-2 border-blue-200"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 rounded-full mr-4 border-2 border-blue-200 bg-blue-800 flex items-center justify-center text-white font-bold text-base flex-shrink-0">
+                        {testimonial.name.split(' ').map(n => n[0]).join('')}
+                      </div>
+                    )}
+                    <div>
+                      <h4 className="font-semibold text-blue-900">{testimonial.name}</h4>
+                      <p className="text-gray-500 text-sm">{testimonial.location}</p>
+                    </div>
+                  </div>
                 </div>
-              </motion.div>
-            ))}
+              ))}
+            </motion.div>
           </AnimatePresence>
         </div>
       </div>
@@ -1284,7 +1294,7 @@ const Footer = () => {
               <a href="#" className="text-gray-300 hover:text-yellow-500 transition" data-cursor-hover="true">
                 <FaTwitter size={24} />
               </a>
-              <a href="https://www.instagram.com/rr_architects_planner/" className="text-gray-300 hover:text-yellow-500 transition" data-cursor-hover="true">
+              <a href="https://www.instagram.com/rrarchitectsplanner/" className="text-gray-300 hover:text-yellow-500 transition" data-cursor-hover="true">
                 <FaInstagram size={24} />
               </a>
               <a href="#" className="text-gray-300 hover:text-yellow-500 transition" data-cursor-hover="true">
